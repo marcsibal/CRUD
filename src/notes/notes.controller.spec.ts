@@ -20,7 +20,7 @@ describe('NotesController', () => {
 
   const mockRequest = {
     user: {
-      email: 'test@example.com',
+      email: 'test@test.com',
     },
   };
 

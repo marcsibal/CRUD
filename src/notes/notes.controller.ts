@@ -10,8 +10,13 @@ export class NotesController {
   constructor(private readonly notesService: NotesService) {}
 
   @Post()
-  create(@Body() createNoteDto: CreateNoteDto, @Req() req: any) {
-    return this.notesService.create(createNoteDto, req.user.email);
+  async create(@Body() createNoteDto: CreateNoteDto, @Req() req: any) {
+    try {
+      return await this.notesService.create(createNoteDto, req.user.email);
+    } catch (error) {
+      // Handle errors or rethrow them.
+      throw new Error('Error creating note');
+    }
   }
 
   @Get()
