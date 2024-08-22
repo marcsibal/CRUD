@@ -7,7 +7,7 @@ import { UserDocument } from '../users/schema/user.schema'
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) { }
 
   @Get('google')
   @UseGuards(GoogleOAuthGuard)
@@ -19,10 +19,8 @@ export class AuthController {
   @UseGuards(GoogleOAuthGuard)
   googleAuthRedirect(@Req() req: Request, @Res() res: Response) {
     const user = req.user as UserDocument;
-    const token = this.authService.generateJwtToken(user);
-    // Instead of redirecting, return the token in the response
-    return res.json({ token });
-    // res.redirect(`http://localhost:9000/api/notes/welcome?user=${user.email}`); //this shows in url
+    return res.json({ message: "Login Successfully Email: " + user.email });
+
 
   }
 }

@@ -31,5 +31,4 @@ describe('AuthController', () => {
     expect(service).toBeDefined();
   });
 
-  // Add more tests here
 });

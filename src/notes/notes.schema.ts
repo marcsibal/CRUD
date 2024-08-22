@@ -10,7 +10,7 @@ export class Note extends Document {
   content: string;
 
   @Prop({ required: true })
-  userEmail: string;
+  user: string;
 }
 
 export const NoteSchema = SchemaFactory.createForClass(Note);

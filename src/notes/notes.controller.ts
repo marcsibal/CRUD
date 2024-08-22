@@ -1,41 +1,44 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, UseGuards, Req, Patch, Query } from '@nestjs/common';
 import { NotesService } from './notes.service';
-import { AuthGuard } from '../auth/auth.guard';
 import { CreateNoteDto } from './dto/create-note-dto';
 import { UpdateNoteDto } from './dto/update-note-dto';
 
 @Controller('notes')
-@UseGuards(AuthGuard)
 export class NotesController {
   constructor(private readonly notesService: NotesService) {}
 
   @Post()
-  async create(@Body() createNoteDto: CreateNoteDto, @Req() req: any) {
-    try {
-      return await this.notesService.create(createNoteDto, req.user.email);
-    } catch (error) {
-      // Handle errors or rethrow them.
-      throw new Error('Error creating note');
-    }
+  async createNote(@Body() createNoteDto: CreateNoteDto) {
+    return this.notesService.insertNote(createNoteDto);
   }
 
   @Get()
-  findAll(@Req() req: any) {
-    return this.notesService.findAll(req.user.email);
+  async getNotes(
+    @Query('page') page?: string, // Page is optional
+  ) {
+    const pageNumber = page ? parseInt(page, 10) : undefined;
+    return this.notesService.getNotes(pageNumber);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string, @Req() req: any) {
-    return this.notesService.findOne(id, req.user.email);
+  async getNote(@Param('id') id: string) {
+    return this.notesService.getNote(id);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateNoteDto: UpdateNoteDto, @Req() req: any) {
-    return this.notesService.update(id, updateNoteDto, req.user.email);
+  async updateNote(
+    @Param('id') id: string,
+    @Body() updateNoteDto: UpdateNoteDto,
+    @Body('user') user: string, // Add user to the request body
+  ) {
+    return this.notesService.updateNote(id, updateNoteDto, user);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string, @Req() req: any) {
-    return this.notesService.remove(id, req.user.email);
+  async deleteNote(
+    @Param('id') id: string,
+    @Body('user') user: string, // Add user to the request body
+  ) {
+    return this.notesService.deleteNote(id, user);
   }
 }
